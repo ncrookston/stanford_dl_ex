@@ -9,10 +9,20 @@ function [f,g] = linear_regression(theta, X,y)
   
   m=size(X,2);
   n=size(X,1);
-
-  f=0;
-  g=zeros(size(theta));
-
+  J = @(t) .5 * sum((X' * t - y').^2);
+  f = J(theta);
+  g = X * (X' * theta - y');
+  
+  ti = randi(numel(theta));
+  e1 = zeros(numel(theta),1);
+  e1(ti) = 1e-4;
+  gt = (J(theta + e1) - J(theta - e1)) / (2 * 1e-4);
+  fprintf('Feature %d difference %0.4e\n', ti, g(ti) - gt);
+%   g = zeros(size(theta));
+%   pn = X' * theta - y';
+%   for j=1:size(X,1)
+%       g(j) = X(j,:) * pn;
+%   end
   %
   % TODO:  Compute the linear regression objective by looping over the examples in X.
   %        Store the objective function value in 'f'.
